@@ -4,7 +4,6 @@
 # Requires next.config.ts { output: "standalone" }
 # -----------------------------------------------------------------------------
 
-# Base image for all stages
 FROM node:22-bullseye-slim AS base
 WORKDIR /app
 ENV NODE_ENV=production
@@ -29,17 +28,18 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# Run as non-root for security
-USER node
+# Prepare writable tmp (do this as root), then hand it to node user
+RUN mkdir -p /app/tmp/uploads && chown -R node:node /app/tmp
 
-# Copy the standalone server and static assets produced by Next build
-# .next/standalone contains server.js and a pruned node_modules set.
+# Copy app (give ownership to node now)
 COPY --chown=node:node --from=builder /app/public ./public
 COPY --chown=node:node --from=builder /app/.next/standalone ./
 COPY --chown=node:node --from=builder /app/.next/static ./.next/static
 
-# Ensure local dev uploads path exists; mount /app/tmp at runtime for persistence
-RUN mkdir -p /app/tmp/uploads
+# Drop privileges
+USER node
+
+# Persist uploads via bind mount at runtime
 VOLUME ["/app/tmp"]
 
 EXPOSE 3000
