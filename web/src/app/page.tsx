@@ -1,20 +1,46 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
 /**
- * Landing page with a modern hero, subtle motion on scroll, and
- * a file uploader wired to POST /api/upload. The UI emphasizes
- * a premium sports aesthetic and progressive disclosure.
+ * Landing page with a modern hero, subtle motion, uploader,
+ * and a Demo Gallery auto-populated from /public/demo via /api/demos.
  */
+type DemoItem = {
+  filename: string;
+  url: string; // e.g., "/demo/nba_01.jpg"
+  bytes: number;
+  modifiedAt: string;
+};
+
 export default function Home() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [demos, setDemos] = useState<DemoItem[] | null>(null);
+  const [demoErr, setDemoErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const res = await fetch('/api/demos', { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        if (alive) setDemos(json.items as DemoItem[]);
+      } catch (e: any) {
+        if (alive) setDemoErr(e?.message || 'Failed to load demos');
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   async function handleFiles(files: FileList | null) {
     setError(null);
@@ -131,6 +157,56 @@ export default function Home() {
               <p className="mt-2 text-sm text-neutral-300">{item.desc}</p>
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      {/* DEMO GALLERY */}
+      <section className="mx-auto max-w-6xl px-4 pb-20">
+        <div className="mb-4 flex items-end justify-between">
+          <h2 className="text-xl font-semibold">Demo Moments</h2>
+          <div className="text-xs text-neutral-500">
+            Add images to <code>/public/demo</code> and they’ll appear here.
+          </div>
+        </div>
+
+        {demoErr && (
+          <div className="rounded-lg bg-red-600/10 border border-red-700/40 p-4 text-sm text-red-300 mb-6">
+            {demoErr}
+          </div>
+        )}
+
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+          {demos === null
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="gs-card p-2 animate-pulse h-48" />
+              ))
+            : demos.length === 0
+            ? (
+              <div className="text-neutral-400 text-sm">
+                No demo images found. Add some files into <code>/public/demo</code>.
+              </div>
+            ) : (
+              demos.slice(0, 12).map((d) => (
+                <a
+                  key={d.filename}
+                  href={`/result/demo?src=${encodeURIComponent(`/demo/${d.filename}`)}`}
+                  className="gs-card overflow-hidden group"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={d.url}
+                    alt={d.filename}
+                    className="h-48 w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+                  />
+                  <div className="px-3 py-2 border-t border-[var(--gs-border)] text-xs flex items-center justify-between">
+                    <span className="text-neutral-300 truncate">{d.filename}</span>
+                    <span className="text-neutral-500">
+                      {Math.round(d.bytes / 1024)} KB
+                    </span>
+                  </div>
+                </a>
+              ))
+            )}
         </div>
       </section>
 
