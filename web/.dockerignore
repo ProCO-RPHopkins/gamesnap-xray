@@ -1,0 +1,21 @@
+# Node & Next artifacts
+node_modules
+.next/cache
+npm-debug.log*
+yarn-error.log*
+
+# Local env/config
+.env*
+.envrc
+
+# Git
+.git
+.gitignore
+
+# OS/editor
+.DS_Store
+.vscode
+.idea
+
+# Local temp uploads (we mount a volume at runtime)
+tmp/uploads
