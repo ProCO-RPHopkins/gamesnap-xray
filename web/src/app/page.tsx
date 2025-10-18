@@ -162,11 +162,8 @@ export default function Home() {
 
       {/* DEMO GALLERY */}
       <section className="mx-auto max-w-6xl px-4 pb-20">
-        <div className="mb-4 flex items-end justify-between">
+        <div className="mb-4">
           <h2 className="text-xl font-semibold">Demo Moments</h2>
-          <div className="text-xs text-neutral-500">
-            Add images to <code>/public/demo</code> and they’ll appear here.
-          </div>
         </div>
 
         {demoErr && (
@@ -183,7 +180,7 @@ export default function Home() {
             : demos.length === 0
             ? (
               <div className="text-neutral-400 text-sm">
-                No demo images found. Add some files into <code>/public/demo</code>.
+                No demo images found.
               </div>
             ) : (
               demos.slice(0, 12).map((d) => (
@@ -191,19 +188,14 @@ export default function Home() {
                   key={d.filename}
                   href={`/result/demo?src=${encodeURIComponent(`/demo/${d.filename}`)}`}
                   className="gs-card overflow-hidden group"
+                  aria-label={`Open demo ${d.filename}`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={d.url}
-                    alt={d.filename}
+                    alt=""
                     className="h-48 w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
                   />
-                  <div className="px-3 py-2 border-t border-[var(--gs-border)] text-xs flex items-center justify-between">
-                    <span className="text-neutral-300 truncate">{d.filename}</span>
-                    <span className="text-neutral-500">
-                      {Math.round(d.bytes / 1024)} KB
-                    </span>
-                  </div>
                 </a>
               ))
             )}
