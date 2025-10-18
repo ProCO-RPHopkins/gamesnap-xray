@@ -31,9 +31,10 @@ export const runtime = 'nodejs';
 
 export async function GET(
   _req: Request,
-  ctx: { params: { filename: string } }
+  ctx: { params: Promise<{ filename: string }> } // Next.js 15: params is async
 ) {
-  const name = ctx.params?.filename ?? '';
+  const { filename } = await ctx.params; // ← must await
+  const name = filename ?? '';
 
   // Reject suspicious names (prevents directory traversal).
   if (!SAFE_NAME.test(name)) {
