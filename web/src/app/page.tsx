@@ -2,11 +2,12 @@
 
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 
 /**
- * Home page: file uploader + "Try demo".
- *
- * After a successful upload, navigates to /result/:id?f=<filename>.
+ * Landing page with a modern hero, subtle motion on scroll, and
+ * a file uploader wired to POST /api/upload. The UI emphasizes
+ * a premium sports aesthetic and progressive disclosure.
  */
 export default function Home() {
   const router = useRouter();
@@ -33,7 +34,6 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || 'Upload failed');
 
-      // Navigate to result page with id + filename query
       router.push(`/result/${data.id}?f=${encodeURIComponent(data.filename)}`);
     } catch (e: any) {
       setError(e?.message || 'Upload failed');
@@ -43,70 +43,134 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white">
-      <div className="mx-auto max-w-4xl px-4 py-16">
-        <header className="mb-10">
-          <h1 className="text-4xl font-bold tracking-tight">GameSnap X-Ray</h1>
-          <p className="mt-3 text-neutral-300">
-            Upload a TV photo or screenshot and we&apos;ll turn it into instant context and a share-ready poster.
-          </p>
-        </header>
-
-        {/* Upload surface */}
-        <div
-          onDragOver={(e) => {
-            e.preventDefault();
-            setDragOver(true);
-          }}
-          onDragLeave={() => setDragOver(false)}
-          onDrop={(e) => {
-            e.preventDefault();
-            setDragOver(false);
-            handleFiles(e.dataTransfer.files);
-          }}
-          className={`rounded-2xl border-2 border-dashed p-12 text-center transition
-            ${dragOver ? 'border-emerald-400 bg-emerald-950/20' : 'border-neutral-700 bg-neutral-900/50'}
-          `}
-        >
-          <p className="mb-4 text-neutral-200">Drag & drop an image here, or</p>
-          <button
-            onClick={() => inputRef.current?.click()}
-            className="rounded-xl bg-white/10 px-5 py-3 font-medium hover:bg-white/15 disabled:opacity-60"
-            disabled={loading}
+    <main className="min-h-screen">
+      {/* HERO */}
+      <section className="relative">
+        <div className="mx-auto max-w-6xl px-4 pt-20 pb-12 md:pt-28 md:pb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+            className="flex flex-col items-center text-center"
           >
-            {loading ? 'Uploading…' : 'Choose image'}
-          </button>
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => handleFiles(e.target.files)}
-          />
-
-          <div className="mt-8">
-            <a
-              href="/result/demo?demo=1"
-              className="text-sm text-neutral-300 underline hover:text-white"
-            >
-              Try a demo first
-            </a>
-          </div>
-        </div>
-
-        {/* Status */}
-        <section className="mt-8 space-y-4">
-          {error && (
-            <div className="rounded-lg bg-red-600/10 border border-red-700/40 p-4 text-sm text-red-300">
-              {error}
+            <div className="gs-pill px-3 py-1 text-xs text-neutral-300">
+              One image → instant sports context
             </div>
-          )}
-        </section>
 
-        <footer className="mt-16 text-center text-xs text-neutral-500">
-          Free mode adds a small watermark • Pro unlocks templates &amp; no watermark
-        </footer>
-      </div>
+            <h1 className="mt-4 text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">
+              GameSnap <span className="text-[var(--gs-accent)]">X-Ray</span>
+            </h1>
+
+            <p className="mt-4 max-w-2xl text-neutral-300 text-lg">
+              Upload a TV photo or screenshot and get a share-ready poster with score, clock,
+              teams, and a transparent win-probability snapshot.
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <button
+                onClick={() => inputRef.current?.click()}
+                className="gs-btn px-6 py-3 text-sm font-semibold disabled:opacity-60"
+                disabled={loading}
+              >
+                {loading ? 'Uploading…' : 'Upload image'}
+              </button>
+              <a
+                href="/result/demo?demo=1"
+                className="px-6 py-3 text-sm font-semibold rounded-xl border border-[var(--gs-border)] hover:bg-white/5"
+              >
+                Try a demo
+              </a>
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handleFiles(e.target.files)}
+              />
+            </div>
+
+            {error && (
+              <div className="mt-4 text-sm text-red-300">
+                {error}
+              </div>
+            )}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className="mx-auto max-w-6xl px-4 pb-14">
+        <div className="grid gap-6 md:grid-cols-3">
+          {[
+            {
+              title: 'Detect scorebug',
+              desc:
+                'We isolate the scoreboard region and extract digits, clock, and team identifiers.',
+            },
+            {
+              title: 'Identify game',
+              desc:
+                'We match the frame against live/recent schedules and pull structured stats.',
+            },
+            {
+              title: 'Render poster',
+              desc:
+                'We build a premium, share-ready poster using team colors and clean typography.',
+            },
+          ].map((item, i) => (
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
+              transition={{ duration: 0.35 + i * 0.05, ease: 'easeOut' }}
+              className="gs-card p-5"
+            >
+              <div className="text-sm text-neutral-400">Step {i + 1}</div>
+              <div className="mt-1 text-xl font-semibold">{item.title}</div>
+              <p className="mt-2 text-sm text-neutral-300">{item.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* FEATURE CALLOUTS */}
+      <section className="mx-auto max-w-6xl px-4 pb-24">
+        <div className="grid gap-6 md:grid-cols-3">
+          {[
+            {
+              k: 'Fast & simple',
+              v: 'A friction-free three-step flow; first-time users get to “wow” in seconds.',
+            },
+            {
+              k: 'Honest analytics',
+              v: 'A transparent baseline model and a public Model Health page for calibration.',
+            },
+            {
+              k: 'Creator-ready',
+              v: 'Export clean posters; free includes watermark, Pro removes it and unlocks templates.',
+            },
+          ].map((f, i) => (
+            <motion.div
+              key={f.k}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35 + i * 0.06, ease: 'easeOut' }}
+              className="gs-card p-5"
+            >
+              <div className="text-[var(--gs-accent)] text-sm font-semibold">{f.k}</div>
+              <p className="mt-2 text-sm text-neutral-300">{f.v}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <footer className="border-t border-[var(--gs-border)]">
+        <div className="mx-auto max-w-6xl px-4 py-8 text-xs text-neutral-500">
+          Free mode adds a small watermark • Pro unlocks templates & no watermark
+        </div>
+      </footer>
     </main>
   );
 }

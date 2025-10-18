@@ -24,3 +24,47 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ---- GameSnap theme tokens ---- */
+:root {
+  --gs-bg: #0a0a0b;
+  --gs-card: #121214;
+  --gs-border: #1f1f23;
+  --gs-text: #f5f5f6;
+  --gs-muted: #a1a1aa;
+  --gs-accent: #22c55e; /* emerald-500 */
+  --gs-accent-700: #15803d; /* emerald-700 */
+}
+
+/* Subtle stadium-like backdrop */
+body {
+  background:
+    radial-gradient(1200px 600px at 50% -10%, rgba(34,197,94,0.08), transparent 60%),
+    radial-gradient(900px 400px at 90% 10%, rgba(34,197,94,0.06), transparent 60%),
+    linear-gradient(180deg, var(--gs-bg) 0%, #070708 100%);
+  color: var(--gs-text);
+}
+
+/* Utility cards */
+.gs-card {
+  background: color-mix(in oklab, var(--gs-card) 92%, black 8%);
+  border: 1px solid var(--gs-border);
+  border-radius: 1rem;
+}
+
+.gs-pill {
+  border-radius: 9999px;
+  border: 1px solid var(--gs-border);
+  background: color-mix(in oklab, var(--gs-card) 85%, black 15%);
+}
+
+/* Accent button */
+.gs-btn {
+  background: color-mix(in oklab, var(--gs-accent) 85%, white 15%);
+  color: black;
+  border-radius: 0.75rem;
+  transition: transform .04s ease;
+}
+.gs-btn:hover { transform: translateY(-1px); }
+.gs-btn:active { transform: translateY(0); }
+
