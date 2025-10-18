@@ -77,3 +77,62 @@ MIT License
 
 ## Notes
 We are **not** a sportsbook; this app provides informational context and visualizations only.
+
+---
+
+## Docker (production build)
+
+This repo includes a multi-stage Dockerfile that builds a **standalone** Next.js server and runs as a non-root user.
+
+### Build
+```bash
+docker build -f web/Dockerfile -t gsx-web:dev ./web
+Run (recommended; persists uploads to host)
+bash
+Copy code
+docker run --rm -p 3000:3000 \
+  -v "$(pwd)/web/tmp:/app/tmp" \
+  --name gsx-web \
+  gsx-web:dev
+Why these flags?
+-p 3000:3000 — expose the app on your host at http://localhost:3000
+
+-v "$(pwd)/web/tmp:/app/tmp" — keep uploaded files in your repo folder (web/tmp/uploads)
+
+--rm — auto-clean the container when it stops
+
+--name gsx-web — easy to stop later: docker stop gsx-web
+
+Minimal smoke test
+bash
+Copy code
+docker run -p 3000:3000 gsx-web:dev
+Note: the image declares VOLUME /app/tmp. If you don’t bind-mount it, Docker will create an anonymous volume that isn’t in your repo folder.
+
+
+---
+
+## Docker (production build)
+
+This repo includes a multi-stage Dockerfile that builds a **standalone** Next.js server and runs as a non-root user.
+
+### Build
+docker build -f web/Dockerfile -t gsx-web:dev ./web
+
+### Run (recommended; persists uploads to host)
+docker run --rm -p 3000:3000 \
+  -v "$(pwd)/web/tmp:/app/tmp" \
+  --name gsx-web \
+  gsx-web:dev
+
+### Why these flags?
+- -p 3000:3000 — expose the app on your host at http://localhost:3000
+- -v "$(pwd)/web/tmp:/app/tmp" — keep uploaded files in your repo folder (web/tmp/uploads)
+- --rm — auto-clean the container when it stops
+- --name gsx-web — easy to stop later: docker stop gsx-web
+
+### Minimal smoke test
+docker run -p 3000:3000 gsx-web:dev
+
+> Note: the image declares VOLUME /app/tmp. If you don’t bind-mount it, Docker will create an anonymous volume that isn’t in your repo folder.
+
