@@ -115,14 +115,6 @@ docker run -p 3000:3000 gsx-web:dev
 ```
 
 > Note: the image declares `VOLUME /app/tmp`. If you don’t bind-mount it, Docker will create an anonymous volume that isn’t in your repo folder.
-
----
-
-Absolutely—let’s add a clean “Docker dev (hot reload)” section to the README so it’s copy-paste friendly for anyone cloning the repo.
-
-### Paste this Markdown into your `README.md` (anywhere under the Docker section)
-
-````markdown
 ---
 
 ## Docker (dev, hot reload)
