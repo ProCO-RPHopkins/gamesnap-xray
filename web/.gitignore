@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Playwright artifacts
+playwright-report/
+test-results/
+
+# Vitest coverage (if you use it later)
+coverage/
+
+# Local temp
+tmp/
