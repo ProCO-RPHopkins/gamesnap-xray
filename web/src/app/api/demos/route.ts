@@ -61,6 +61,6 @@ export async function GET() {
         // Dev-friendly; we can add stronger caching later
         'Cache-Control': 'no-store',
       },
-    }
+    },
   );
 }

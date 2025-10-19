@@ -58,7 +58,12 @@ export default function Home() {
       const fd = new FormData();
       fd.append('file', file);
       const res = await fetch('/api/upload', { method: 'POST', body: fd });
-      const data = (await res.json()) as { id: string; filename: string; mime?: string; error?: string };
+      const data = (await res.json()) as {
+        id: string;
+        filename: string;
+        mime?: string;
+        error?: string;
+      };
       if (!res.ok) throw new Error(data?.error ?? 'Upload failed');
 
       router.push(`/result/${data.id}?f=${encodeURIComponent(data.filename)}`);
@@ -89,8 +94,8 @@ export default function Home() {
             </h1>
 
             <p className="mt-4 max-w-2xl text-neutral-300 text-lg">
-              Upload a TV photo or screenshot and get a share-ready poster with score, clock,
-              teams, and a transparent win-probability snapshot.
+              Upload a TV photo or screenshot and get a share-ready poster with score, clock, teams,
+              and a transparent win-probability snapshot.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -116,11 +121,7 @@ export default function Home() {
               />
             </div>
 
-            {error && (
-              <div className="mt-4 text-sm text-red-300">
-                {error}
-              </div>
-            )}
+            {error && <div className="mt-4 text-sm text-red-300">{error}</div>}
           </motion.div>
         </div>
       </section>
@@ -129,9 +130,18 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-4 pb-14">
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { title: 'Detect scorebug', desc: 'We isolate the scoreboard region and extract digits, clock, and team identifiers.' },
-            { title: 'Identify game',   desc: 'We match the frame against live/recent schedules and pull structured stats.' },
-            { title: 'Render poster',   desc: 'We build a premium, share-ready poster using team colors and clean typography.' },
+            {
+              title: 'Detect scorebug',
+              desc: 'We isolate the scoreboard region and extract digits, clock, and team identifiers.',
+            },
+            {
+              title: 'Identify game',
+              desc: 'We match the frame against live/recent schedules and pull structured stats.',
+            },
+            {
+              title: 'Render poster',
+              desc: 'We build a premium, share-ready poster using team colors and clean typography.',
+            },
           ].map((item, i) => (
             <div key={item.title} className="gs-card p-5">
               <div className="text-sm text-neutral-400">Step {i + 1}</div>
@@ -155,30 +165,29 @@ export default function Home() {
         )}
 
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {demos === null
-            ? Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="gs-card p-2 animate-pulse h-48" />
-              ))
-            : demos.length === 0
-            ? (
-              <div className="text-neutral-400 text-sm">No demo images found.</div>
-            ) : (
-              demos.slice(0, 12).map((d) => (
-                <Link
-                  key={d.filename}
-                  href={`/result/demo?src=${encodeURIComponent(`/demo/${d.filename}`)}`}
-                  className="gs-card overflow-hidden group"
-                  aria-label={`Open demo ${d.filename}`}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={d.url}
-                    alt=""
-                    className="h-48 w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
-                  />
-                </Link>
-              ))
-            )}
+          {demos === null ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="gs-card p-2 animate-pulse h-48" />
+            ))
+          ) : demos.length === 0 ? (
+            <div className="text-neutral-400 text-sm">No demo images found.</div>
+          ) : (
+            demos.slice(0, 12).map((d) => (
+              <Link
+                key={d.filename}
+                href={`/result/demo?src=${encodeURIComponent(`/demo/${d.filename}`)}`}
+                className="gs-card overflow-hidden group"
+                aria-label={`Open demo ${d.filename}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={d.url}
+                  alt=""
+                  className="h-48 w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+                />
+              </Link>
+            ))
+          )}
         </div>
       </section>
 

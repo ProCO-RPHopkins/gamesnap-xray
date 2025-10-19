@@ -71,10 +71,7 @@ export default function ResultPage() {
       <div className="mx-auto max-w-5xl px-4 py-10">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Moment X-Ray</h1>
-          <Link
-            className="rounded-md bg-white/10 px-3 py-1.5 text-sm hover:bg-white/15"
-            href="/"
-          >
+          <Link className="rounded-md bg-white/10 px-3 py-1.5 text-sm hover:bg-white/15" href="/">
             New upload
           </Link>
         </div>
@@ -138,7 +135,8 @@ export default function ResultPage() {
                 </button>
               </div>
               <div className="mt-3 text-xs text-neutral-500">
-                Free mode will include a small watermark on poster exports. Pro removes watermark and unlocks templates.
+                Free mode will include a small watermark on poster exports. Pro removes watermark
+                and unlocks templates.
               </div>
             </div>
           </div>

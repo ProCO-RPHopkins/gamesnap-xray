@@ -15,7 +15,7 @@ export const runtime = 'nodejs';
 
 export async function GET(
   _req: Request,
-  ctx: { params: Promise<{ filename: string }> } // Next.js 15: params are async
+  ctx: { params: Promise<{ filename: string }> }, // Next.js 15: params are async
 ) {
   const { filename } = await ctx.params;
   const name = filename ?? '';
@@ -46,7 +46,8 @@ export async function GET(
   const body = new Uint8Array(buf);
   // --- END FIX ---
 
-  return new Response(body, { // <-- Pass the Uint8Array here
+  return new Response(body, {
+    // <-- Pass the Uint8Array here
     headers: {
       'Content-Type': mime,
       'Cache-Control': 'private, max-age=60',

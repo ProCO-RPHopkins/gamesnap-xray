@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 /**
  * Next.js config
@@ -6,7 +6,7 @@ import type { NextConfig } from "next";
  * - Safe defaults; adjust as features are added.
  */
 const nextConfig: NextConfig = {
-  output: "standalone",
+  output: 'standalone',
 };
 
 export default nextConfig;

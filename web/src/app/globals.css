@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
@@ -39,8 +39,8 @@ body {
 /* Subtle stadium-like backdrop */
 body {
   background:
-    radial-gradient(1200px 600px at 50% -10%, rgba(34,197,94,0.08), transparent 60%),
-    radial-gradient(900px 400px at 90% 10%, rgba(34,197,94,0.06), transparent 60%),
+    radial-gradient(1200px 600px at 50% -10%, rgba(34, 197, 94, 0.08), transparent 60%),
+    radial-gradient(900px 400px at 90% 10%, rgba(34, 197, 94, 0.06), transparent 60%),
     linear-gradient(180deg, var(--gs-bg) 0%, #070708 100%);
   color: var(--gs-text);
 }
@@ -63,8 +63,11 @@ body {
   background: color-mix(in oklab, var(--gs-accent) 85%, white 15%);
   color: black;
   border-radius: 0.75rem;
-  transition: transform .04s ease;
+  transition: transform 0.04s ease;
 }
-.gs-btn:hover { transform: translateY(-1px); }
-.gs-btn:active { transform: translateY(0); }
-
+.gs-btn:hover {
+  transform: translateY(-1px);
+}
+.gs-btn:active {
+  transform: translateY(0);
+}
