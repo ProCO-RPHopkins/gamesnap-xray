@@ -118,6 +118,44 @@ docker run -p 3000:3000 gsx-web:dev
 
 ---
 
+Absolutely—let’s add a clean “Docker dev (hot reload)” section to the README so it’s copy-paste friendly for anyone cloning the repo.
+
+### Paste this Markdown into your `README.md` (anywhere under the Docker section)
+
+````markdown
+---
+
+## Docker (dev, hot reload)
+
+Run the Next.js dev server **inside a container** with live reload.
+
+**Requirements:** Docker + Docker Compose  
+**Compose file:** `web/docker-compose.dev.yml`
+
+### Start (hot reload)
+```bash
+docker compose -f web/docker-compose.dev.yml up
+````
+
+### Stop
+
+```bash
+docker compose -f web/docker-compose.dev.yml down
+```
+
+**What this does**
+
+* Mounts your source (`./web` → `/app`) so edits hot-reload.
+* Keeps `node_modules` managed in the container (no host conflicts).
+* Persists uploads by mounting `./web/tmp` → `/app/tmp`.
+* Exposes the app on `http://localhost:3000`.
+
+**Troubleshooting**
+
+* If edits aren’t detected on some Docker/WSL setups, uncomment the `sysctls` lines in `web/docker-compose.dev.yml` to increase inotify watches.
+* Ensure any local `npm run dev` isn’t already holding port 3000.
+---
+
 ## Project Conventions
 
 * **Doc comments:** TSDoc (`/** ... */`) above modules/functions/handlers. Use `@param`, `@returns`, `@remarks`, `@example`. Use `TODO:` for deferred work.
