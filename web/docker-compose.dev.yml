@@ -1,0 +1,21 @@
+services:
+  web:
+    image: node:22-bullseye-slim
+    working_dir: /app
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+    command: sh -lc "npm ci && npm run dev"
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount your source for hot reload
+      - ./:/app
+      # Keep node_modules container-managed (don't overwrite with empty host dir)
+      - /app/node_modules
+      # Persist uploads in your repo folder
+      - ./tmp:/app/tmp
+    # Improves FS change detection in some Docker/WSL setups
+    # (uncomment if you notice missed reloads)
+    # sysctls:
+    #   - fs.inotify.max_user_watches=524288
